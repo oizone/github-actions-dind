@@ -1,3 +1,14 @@
 #!/bin/bash
 
-docker run -e USER="oizone" -e RUNNER_NAME="testorioni" -e TOKEN="ec13a5ce1d0ca8e9562c57b2c4d47dcbfbb205a6" -e REPO="oizone/vm-imager-win" -e RUNNER_LABELS="test,jospos"  oizone/github-actions-runner /bin/bash
+exit_loop() {
+    docker stop oizone/github-actions-runner
+    exit
+}
+
+
+trap exit_loop SIGINT SIGQUIT SIGTERM
+
+while true; do
+    docker run -i --rm USER="${USER}" -e RUNNER_NAME="${RUNNER_NAME}" -e TOKEN="${TOKEN}" -e REPO="${REPO}" -e RUNNER_LABELS="${RUNNER_LABELS}"  oizone/github-actions-runner 
+done
+
